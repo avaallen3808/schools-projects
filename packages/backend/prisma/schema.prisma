@@ -54,7 +54,8 @@ model User {
   branch              Branch?              @relation(fields: [branchId], references: [id])
   registrations       Registration[]
   presenceRecords     PresenceRecord[]
-  subjectsAsTeacher   SubjectPresence[]    @relation("teacher")
+  posts               Post[]
+  // subjectsAsTeacher   SubjectPresence[]    @relation("teacher")
 
   @@index([branchId])
   @@index([email])
