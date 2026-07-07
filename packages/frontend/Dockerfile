@@ -1,0 +1,39 @@
+# Build stage
+FROM node:20-alpine AS builder
+
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+WORKDIR /app
+
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+COPY packages/shared/package.json ./packages/shared/
+COPY packages/frontend/package.json ./packages/frontend/
+RUN pnpm install --frozen-lockfile
+
+COPY packages/shared/ ./packages/shared/
+COPY packages/frontend/ ./packages/frontend/
+
+RUN pnpm --filter @cms-sekolah/shared build
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+RUN pnpm --filter @cms-sekolah/frontend build
+
+# Production stage
+FROM node:20-alpine AS runner
+
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+COPY --from=builder /app/packages/frontend/.next/standalone ./
+COPY --from=builder /app/packages/frontend/.next/static ./.next/static
+COPY --from=builder /app/packages/frontend/public ./public
+
+EXPOSE 3000
+
+ENV PORT=3000
+
+CMD ["node", "server.js"]

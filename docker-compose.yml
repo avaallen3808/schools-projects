@@ -1,6 +1,7 @@
 version: "3.9"
 
 services:
+  # ── Database ──────────────────────────────────────────────
   postgres:
     image: postgres:16-alpine
     container_name: cms-postgres
@@ -17,7 +18,10 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - cms-network
 
+  # ── Redis ─────────────────────────────────────────────────
   redis:
     image: redis:7-alpine
     container_name: cms-redis
@@ -30,7 +34,61 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - cms-network
+
+  # ── Backend API ──────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: packages/backend/Dockerfile
+    container_name: cms-api
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      API_PREFIX: api
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/cms_sekolah?schema=public
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      JWT_EXPIRATION: 7d
+      JWT_REFRESH_EXPIRATION: 30d
+      CORS_ORIGIN: http://localhost:3000
+      THROTTLE_LIMIT: 60
+      UPLOAD_DIR: ./uploads
+    volumes:
+      - uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - cms-network
+
+  # ── Frontend (Next.js) ──────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: packages/frontend/Dockerfile
+    container_name: cms-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: http://localhost:4000
+      NEXT_TELEMETRY_DISABLED: 1
+    depends_on:
+      api:
+        condition: service_started
+    networks:
+      - cms-network
 
 volumes:
   postgres_data:
   redis_data:
+  uploads:
+
+networks:
+  cms-network:
+    driver: bridge
