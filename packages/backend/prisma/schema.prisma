@@ -55,10 +55,36 @@ model User {
   registrations       Registration[]
   presenceRecords     PresenceRecord[]
   posts               Post[]
-  // subjectsAsTeacher   SubjectPresence[]    @relation("teacher")
+  refreshTokens       RefreshToken[]
+  verificationTokens  EmailVerification[]
 
   @@index([branchId])
   @@index([email])
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model EmailVerification {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
 }
 
 model Branch {
