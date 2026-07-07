@@ -97,6 +97,36 @@ export class AuthService {
     return { accessToken, refreshToken, user: { id: userId, email, role } };
   }
 
+  async forgotPassword(email: string) {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) return { message: 'Jika email terdaftar, link reset password akan dikirim' };
+
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 1);
+
+    await this.prisma.emailVerification.create({
+      data: { userId: user.id, token, expiresAt },
+    });
+
+    // TODO: send email with reset link
+    return { message: 'Link reset password telah dikirim', token };
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    const stored = await this.prisma.emailVerification.findUnique({ where: { token } });
+    if (!stored || stored.expiresAt < new Date()) {
+      if (stored) await this.prisma.emailVerification.delete({ where: { id: stored.id } });
+      throw new BadRequestException('Token reset tidak valid atau kedaluwarsa');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    await this.prisma.user.update({ where: { id: stored.userId }, data: { password: hashedPassword } });
+    await this.prisma.emailVerification.delete({ where: { id: stored.id } });
+
+    return { message: 'Password berhasil direset' };
+  }
+
   private async createEmailVerification(userId: string) {
     const token = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date();

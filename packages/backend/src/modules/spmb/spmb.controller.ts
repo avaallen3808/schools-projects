@@ -113,4 +113,9 @@ export class SpmbController {
   calculateTotalScore(@Param('id') id: string) {
     return this.spmbService.calculateTotalScore(id);
   }
+
+  @Post('selection/run')
+  runSelection(@Body() body: { offeringId: string }) {
+    return this.spmbService.runSelection(body.offeringId);
+  }
 }

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../common/prisma.service';
 
@@ -167,5 +167,56 @@ export class SpmbService {
     const totalScore = avgRapor * raporWeight + avgUjian * ujianWeight;
 
     return this.prisma.registration.update({ where: { id }, data: { totalScore } });
+  }
+
+  // ── Auto-Selection ──────────────────────────────────────
+
+  async runSelection(offeringId: string) {
+    const offering = await this.prisma.admissionOffering.findUnique({ where: { id: offeringId } });
+    if (!offering) throw new NotFoundException('Offering tidak ditemukan');
+
+    // Calculate scores for all pending registrations
+    const registrations = await this.prisma.registration.findMany({
+      where: { offeringId, status: 'SUBMITTED' },
+      include: { subjectGrades: true, examScores: true },
+    });
+
+    if (registrations.length === 0) {
+      throw new BadRequestException('Tidak ada pendaftar dengan status SUBMITTED');
+    }
+
+    const config = offering.selectionConfig as Record<string, number> | null;
+    const raporWeight = config?.raporWeight ?? 0.6;
+    const ujianWeight = config?.ujianWeight ?? 0.4;
+
+    // Calculate and update total scores
+    for (const reg of registrations) {
+      const avgRapor = reg.subjectGrades.length > 0
+        ? reg.subjectGrades.reduce((sum, g) => sum + g.score, 0) / reg.subjectGrades.length
+        : 0;
+      const avgUjian = reg.examScores.length > 0
+        ? reg.examScores.reduce((sum, g) => sum + g.score, 0) / reg.examScores.length
+        : 0;
+      const totalScore = avgRapor * raporWeight + avgUjian * ujianWeight;
+
+      await this.prisma.registration.update({ where: { id: reg.id }, data: { totalScore } });
+    }
+
+    // Re-fetch with updated scores, sort descending
+    const ranked = await this.prisma.registration.findMany({
+      where: { offeringId, status: 'SUBMITTED' },
+      orderBy: { totalScore: 'desc' },
+    });
+
+    // Accept up to quota
+    const accepted = ranked.slice(0, offering.quota);
+    const rejected = ranked.slice(offering.quota);
+
+    await Promise.all([
+      ...accepted.map((r) => this.prisma.registration.update({ where: { id: r.id }, data: { status: 'ACCEPTED' } })),
+      ...rejected.map((r) => this.prisma.registration.update({ where: { id: r.id }, data: { status: 'REJECTED' } })),
+    ]);
+
+    return { accepted: accepted.length, rejected: rejected.length, total: ranked.length };
   }
 }
