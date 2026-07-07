@@ -112,7 +112,7 @@ export class SpmbService {
   }
 
   async updateRegistrationStatus(id: string, status: string) {
-    const reg = await this.getRegistration(id);
+    await this.getRegistration(id);
     return this.prisma.registration.update({ where: { id }, data: { status: status as any } });
   }
 
@@ -148,7 +148,6 @@ export class SpmbService {
 
   async calculateTotalScore(id: string) {
     const reg = await this.getRegistration(id);
-    if (!reg) throw new NotFoundException('Registrasi tidak ditemukan');
 
     const offering = reg.offering;
     const config = offering.selectionConfig as Record<string, number> | null;

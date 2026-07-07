@@ -53,7 +53,7 @@ describe('SpmbService', () => {
     });
     mockPrisma.registration.update.mockResolvedValue({ id: 'r1', totalScore: 82 });
 
-    const result = await service.calculateTotalScore('r1');
+    await service.calculateTotalScore('r1');
     expect(mockPrisma.registration.update).toHaveBeenCalled();
   });
 

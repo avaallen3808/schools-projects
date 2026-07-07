@@ -8,7 +8,7 @@ async function main() {
 
   // Superadmin
   const superadminPassword = await bcrypt.hash('admin123', 12);
-  const superadmin = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: { email: 'admin@sekolah.com' },
     update: {},
     create: {
@@ -21,7 +21,7 @@ async function main() {
   });
 
   // Branch
-  const branch = await prisma.branch.upsert({
+  await prisma.branch.upsert({
     where: { id: 'branch-1' },
     update: {},
     create: {
@@ -33,7 +33,7 @@ async function main() {
   });
 
   // Academic Year
-  const academicYear = await prisma.academicYear.upsert({
+  await prisma.academicYear.upsert({
     where: { id: 'ay-2025-2026' },
     update: {},
     create: {

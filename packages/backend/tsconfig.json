@@ -20,6 +20,6 @@
     "strictPropertyInitialization": false,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["src/**/*", "test/**/*", "prisma/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
