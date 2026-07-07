@@ -21,14 +21,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
+  const hasHydrated = useAuthStore((s) => s.hasHydrated);
   const logout = useLogout();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    if (!user) router.push('/login');
-  }, [user, router]);
+    if (hasHydrated && !user) router.push('/login');
+  }, [hasHydrated, user, router]);
 
-  if (!user) return null;
+  if (!hasHydrated || !user) return null;
 
   const userName = user.name || user.email || 'User';
 
