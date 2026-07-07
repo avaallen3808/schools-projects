@@ -36,7 +36,7 @@ export default function AdminSlidersPage() {
             <button onClick={() => deleteMutation.mutate(s.id)} className="text-xs underline" style={{ color: '#dc2626', background: 'none', border: 'none', cursor: 'pointer' }}>Hapus</button>
           )},
         ]}
-        data={sliders || []}
+        data={(sliders as any[]) || []}
       />
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Tambah Slider">

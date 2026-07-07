@@ -39,7 +39,7 @@ export default function AdminPagesPage() {
           { key: 'slug', header: 'Slug', render: (p: any) => <code className="text-xs" style={{ color: '#999' }}>{p.slug}</code> },
           { key: 'published', header: 'Status', render: (p: any) => <Badge label={p.published ? 'published' : 'draft'} /> },
         ]}
-        data={pages || []}
+        data={(pages as any[]) || []}
         emptyMessage="Belum ada halaman"
       />
 

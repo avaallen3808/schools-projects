@@ -13,9 +13,10 @@ interface DataTableProps<T> {
   columns: Column<T>[];
   data: T[];
   emptyMessage?: string;
+  isLoading?: boolean;
 }
 
-export function DataTable<T extends Record<string, unknown>>({ columns, data, emptyMessage = 'Tidak ada data' }: DataTableProps<T>) {
+export function DataTable<T extends Record<string, unknown>>({ columns, data, emptyMessage = 'Tidak ada data', isLoading }: DataTableProps<T>) {
   return (
     <div className="overflow-x-auto rounded-xl" style={{ border: '1px solid #f6f4ee' }}>
       <table className="w-full text-sm" style={{ borderCollapse: 'collapse' }}>
@@ -29,7 +30,13 @@ export function DataTable<T extends Record<string, unknown>>({ columns, data, em
           </tr>
         </thead>
         <tbody>
-          {data.length === 0 ? (
+          {isLoading ? (
+            <tr>
+              <td colSpan={columns.length} className="px-4 py-8 text-center" style={{ color: '#999' }}>
+                Memuat...
+              </td>
+            </tr>
+          ) : data.length === 0 ? (
             <tr>
               <td colSpan={columns.length} className="px-4 py-8 text-center" style={{ color: '#999' }}>
                 {emptyMessage}

@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export const dynamic = 'force-dynamic';
 
 async function getPeriods() {
@@ -41,6 +43,24 @@ export default async function SpmbPage() {
         </p>
       )}
 
+      {/* Steps info */}
+      <div className="grid gap-4 mb-10 md:grid-cols-4">
+        {[
+          { step: '1', title: 'Daftar Akun', desc: 'Buat akun siswa atau orangtua' },
+          { step: '2', title: 'Pilih Program', desc: 'Pilih cabang dan jurusan' },
+          { step: '3', title: 'Submit Berkas', desc: 'Unggah dokumen persyaratan' },
+          { step: '4', title: 'Pengumuman', desc: 'Cek hasil seleksi online' },
+        ].map((s) => (
+          <div key={s.step} className="p-5 text-center" style={{ background: '#f6f4ee', borderRadius: 30 }}>
+            <div className="w-10 h-10 mx-auto mb-3 flex items-center justify-center font-semibold text-sm" style={{ background: '#fdc72f', borderRadius: 100 }}>
+              {s.step}
+            </div>
+            <p className="text-sm font-medium mb-1">{s.title}</p>
+            <p className="text-xs" style={{ color: '#999' }}>{s.desc}</p>
+          </div>
+        ))}
+      </div>
+
       {periods.length === 0 ? (
         <div className="p-8 text-center" style={{ background: '#f6f4ee', borderRadius: 50 }}>
           <p style={{ color: '#666' }}>Belum ada periode pendaftaran dibuka.</p>
@@ -53,11 +73,30 @@ export default async function SpmbPage() {
               <p className="text-sm mb-2" style={{ color: '#666' }}>
                 {new Date(p.startDate).toLocaleDateString('id-ID')} — {new Date(p.endDate).toLocaleDateString('id-ID')}
               </p>
-              {p.academicYear && <p className="text-xs" style={{ color: '#999' }}>T.A. {p.academicYear.name}</p>}
+              {p.academicYear && <p className="text-xs mb-4" style={{ color: '#999' }}>T.A. {p.academicYear.name}</p>}
+              {p._count?.offerings != null && p._count.offerings > 0 && (
+                <p className="text-xs mb-4" style={{ color: '#999' }}>{p._count.offerings} program tersedia</p>
+              )}
             </div>
           ))}
         </div>
       )}
+
+      {/* CTA */}
+      <div className="text-center mt-10">
+        <Link
+          href="/spmb/apply"
+          className="inline-block px-8 py-3 text-base font-medium"
+          style={{ background: '#fdc72f', color: '#000', borderRadius: 100, textDecoration: 'none' }}
+        >
+          Daftar Sekarang
+        </Link>
+        <div className="mt-4">
+          <Link href="/spmb/status" className="text-sm underline" style={{ color: '#4c4c4c' }}>
+            Sudah mendaftar? Cek status
+          </Link>
+        </div>
+      </div>
     </section>
   );
 }
