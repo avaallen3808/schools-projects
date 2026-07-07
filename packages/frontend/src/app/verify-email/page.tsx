@@ -31,7 +31,7 @@ export default function VerifyEmailPage() {
 
   return (
     <section className="flex items-center justify-center min-h-[70vh] px-6">
-      <div className="w-full max-w-md p-10 text-center" style={{ background: '#ffffff', borderRadius: 50, boxShadow: 'rgba(0,0,0,0.06) 0px 4px 30px 0px' }}>
+      <div className="w-full max-w-md p-10 text-center bg-bg rounded-card shadow-[0_4px_30px_rgba(0,0,0,0.06)]">
         {status === 'loading' && (
           <>
             <div className="text-4xl mb-4">⏳</div>
@@ -42,10 +42,9 @@ export default function VerifyEmailPage() {
         {status === 'success' && (
           <>
             <div className="text-4xl mb-4">✅</div>
-            <h1 className="text-2xl mb-2" style={{ fontFamily: 'Prata, serif' }}>Email Terverifikasi</h1>
-            <p className="mb-6" style={{ color: '#666' }}>{message}</p>
-            <Link href="/login" className="px-6 py-2 text-sm font-medium inline-block"
-              style={{ background: '#fdc72f', color: '#000', borderRadius: 100 }}>
+            <h1 className="text-2xl mb-2">Email Terverifikasi</h1>
+            <p className="mb-6 text-text-secondary">{message}</p>
+            <Link href="/login" className="px-6 py-2 text-sm font-medium inline-block bg-primary text-text rounded-pill">
               Masuk Sekarang
             </Link>
           </>
@@ -54,9 +53,9 @@ export default function VerifyEmailPage() {
         {status === 'error' && (
           <>
             <div className="text-4xl mb-4">❌</div>
-            <h1 className="text-2xl mb-2" style={{ fontFamily: 'Prata, serif' }}>Verifikasi Gagal</h1>
-            <p className="mb-6" style={{ color: '#666' }}>{message}</p>
-            <Link href="/login" className="underline text-sm" style={{ color: '#07294d' }}>
+            <h1 className="text-2xl mb-2">Verifikasi Gagal</h1>
+            <p className="mb-6 text-text-secondary">{message}</p>
+            <Link href="/login" className="underline text-sm text-bg-secondary">
               Kembali ke Login
             </Link>
           </>

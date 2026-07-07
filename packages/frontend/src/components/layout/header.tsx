@@ -9,29 +9,28 @@ export function Header() {
   const logout = useLogout();
 
   return (
-    <header className="flex items-center justify-between px-8 py-5" style={{ background: '#ffffff', borderBottom: '1px solid #f6f4ee' }}>
-      <Link href="/" className="text-xl font-semibold" style={{ color: '#07294d', fontFamily: 'Prata, serif' }}>
+    <header className="flex items-center justify-between px-8 py-5 bg-bg border-b border-border">
+      <Link href="/" className="text-xl font-heading font-semibold text-bg-secondary" style={{ textDecoration: 'none' }}>
         CMS Sekolah
       </Link>
       <nav className="flex gap-8">
-        <Link href="/" className="text-sm" style={{ color: '#4c4c4c' }}>Beranda</Link>
-        <Link href="/blog" className="text-sm" style={{ color: '#4c4c4c' }}>Blog</Link>
-        <Link href="/spmb" className="text-sm" style={{ color: '#4c4c4c' }}>SPMB</Link>
+        <Link href="/" className="text-sm text-text" style={{ textDecoration: 'none' }}>Beranda</Link>
+        <Link href="/blog" className="text-sm text-text" style={{ textDecoration: 'none' }}>Blog</Link>
+        <Link href="/spmb" className="text-sm text-text" style={{ textDecoration: 'none' }}>SPMB</Link>
       </nav>
       <div className="flex items-center gap-4">
         {user ? (
           <>
             <Link
               href="/admin"
-              className="text-sm px-5 py-2"
-              style={{ background: '#fdc72f', color: '#000', borderRadius: 100 }}
+              className="text-sm px-5 py-2 bg-primary text-text rounded-pill font-medium"
+              style={{ textDecoration: 'none' }}
             >
               Dashboard
             </Link>
             <button
               onClick={logout}
-              className="text-sm"
-              style={{ color: '#4c4c4c', background: 'none', border: 'none', cursor: 'pointer' }}
+              className="text-sm text-text bg-transparent border-none cursor-pointer"
             >
               Keluar
             </button>
@@ -39,8 +38,8 @@ export function Header() {
         ) : (
           <Link
             href="/login"
-            className="text-sm px-5 py-2"
-            style={{ background: '#fdc72f', color: '#000', borderRadius: 100 }}
+            className="text-sm px-5 py-2 bg-primary text-text rounded-pill font-medium"
+            style={{ textDecoration: 'none' }}
           >
             Masuk
           </Link>

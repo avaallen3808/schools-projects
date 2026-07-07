@@ -17,7 +17,7 @@ export default async function PageDetail({ params }: { params: { slug: string } 
     return (
       <section className="px-8 py-16 text-center">
         <h1 className="text-4xl mb-4">Halaman tidak ditemukan</h1>
-        <Link href="/" className="underline" style={{ color: '#fdc72f' }}>Kembali ke Beranda</Link>
+        <Link href="/" className="underline text-primary">Kembali ke Beranda</Link>
       </section>
     );
   }

@@ -29,23 +29,22 @@ export default function AdminCategoriesPage() {
 
   return (
     <section className="px-8 py-10">
-      <h1 className="text-3xl mb-8" style={{ fontFamily: 'Prata, serif' }}>Kategori</h1>
+      <h1 className="text-3xl mb-8">Kategori</h1>
 
       <div className="flex gap-3 mb-8 items-end">
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium" style={{ color: '#4c4c4c' }}>Nama</label>
+          <label className="text-xs font-medium text-text">Nama</label>
           <input value={name} onChange={(e) => { setName(e.target.value); setSlug(e.target.value.toLowerCase().replace(/\s+/g, '-')); }}
-            className="px-4 py-2 rounded-xl text-sm" style={{ border: '1px solid #f6f4ee' }} />
+            className="px-4 py-2 rounded-xl text-sm border border-border outline-none focus:border-primary" />
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium" style={{ color: '#4c4c4c' }}>Slug</label>
+          <label className="text-xs font-medium text-text">Slug</label>
           <input value={slug} onChange={(e) => setSlug(e.target.value)}
-            className="px-4 py-2 rounded-xl text-sm" style={{ border: '1px solid #f6f4ee' }} />
+            className="px-4 py-2 rounded-xl text-sm border border-border outline-none focus:border-primary" />
         </div>
         <button onClick={() => createMutation.mutate({ name, slug })}
           disabled={!name || !slug || createMutation.isPending}
-          className="px-5 py-2 text-sm font-medium disabled:opacity-50"
-          style={{ background: '#fdc72f', color: '#000', borderRadius: 100, border: 'none', cursor: 'pointer' }}>
+          className="px-5 py-2 text-sm font-medium disabled:opacity-50 bg-primary text-text rounded-pill border-none cursor-pointer">
           + Tambah
         </button>
       </div>
@@ -53,10 +52,10 @@ export default function AdminCategoriesPage() {
       <DataTable
         columns={[
           { key: 'name', header: 'Nama', render: (c: any) => c.name },
-          { key: 'slug', header: 'Slug', render: (c: any) => <code className="text-xs" style={{ color: '#999' }}>{c.slug}</code> },
+          { key: 'slug', header: 'Slug', render: (c: any) => <code className="text-xs text-text-secondary">{c.slug}</code> },
           { key: 'count', header: 'Posts', render: (c: any) => <Badge label={String(c._count?.posts || 0)} /> },
           { key: 'actions', header: '', render: (c: any) => (
-            <button onClick={() => deleteMutation.mutate(c.id)} className="text-xs underline" style={{ color: '#dc2626', background: 'none', border: 'none', cursor: 'pointer' }}>
+            <button onClick={() => deleteMutation.mutate(c.id)} className="text-xs underline text-error bg-transparent border-none cursor-pointer">
               Hapus
             </button>
           )},

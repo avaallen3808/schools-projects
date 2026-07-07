@@ -24,11 +24,11 @@ export default function RegisterPage() {
 
   return (
     <section className="flex items-center justify-center min-h-[70vh] px-6">
-      <div className="w-full max-w-md p-10" style={{ background: '#ffffff', borderRadius: 50, boxShadow: 'rgba(0,0,0,0.06) 0px 4px 30px 0px' }}>
-        <h1 className="text-3xl mb-8 text-center font-serif">Daftar</h1>
+      <div className="w-full max-w-md p-10 bg-bg rounded-card shadow-[0_4px_30px_rgba(0,0,0,0.06)]">
+        <h1 className="text-3xl mb-8 text-center">Daftar</h1>
 
         {error && (
-          <p className="text-sm mb-4 text-center" style={{ color: '#dc2626' }}>{error}</p>
+          <p className="text-sm mb-4 text-center text-error">{error}</p>
         )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
@@ -36,10 +36,9 @@ export default function RegisterPage() {
             <input
               {...reg('name')}
               placeholder="Nama Lengkap"
-              className="w-full px-5 py-3 text-base"
-              style={{ border: '1px solid #f6f4ee', borderRadius: 12, color: '#4c4c4c' }}
+              className="w-full px-5 py-3 text-base rounded-xl border border-border focus:border-primary outline-none text-text"
             />
-            {errors.name && <p className="text-xs mt-1" style={{ color: '#dc2626' }}>{errors.name.message}</p>}
+            {errors.name && <p className="text-xs mt-1 text-error">{errors.name.message}</p>}
           </div>
 
           <div>
@@ -47,10 +46,9 @@ export default function RegisterPage() {
               {...reg('email')}
               type="email"
               placeholder="Email"
-              className="w-full px-5 py-3 text-base"
-              style={{ border: '1px solid #f6f4ee', borderRadius: 12, color: '#4c4c4c' }}
+              className="w-full px-5 py-3 text-base rounded-xl border border-border focus:border-primary outline-none text-text"
             />
-            {errors.email && <p className="text-xs mt-1" style={{ color: '#dc2626' }}>{errors.email.message}</p>}
+            {errors.email && <p className="text-xs mt-1 text-error">{errors.email.message}</p>}
           </div>
 
           <div>
@@ -58,25 +56,23 @@ export default function RegisterPage() {
               {...reg('password')}
               type="password"
               placeholder="Password"
-              className="w-full px-5 py-3 text-base"
-              style={{ border: '1px solid #f6f4ee', borderRadius: 12, color: '#4c4c4c' }}
+              className="w-full px-5 py-3 text-base rounded-xl border border-border focus:border-primary outline-none text-text"
             />
-            {errors.password && <p className="text-xs mt-1" style={{ color: '#dc2626' }}>{errors.password.message}</p>}
+            {errors.password && <p className="text-xs mt-1 text-error">{errors.password.message}</p>}
           </div>
 
           <button
             type="submit"
             disabled={isPending}
-            className="w-full py-3 text-base font-medium disabled:opacity-50"
-            style={{ background: '#fdc72f', color: '#000', borderRadius: 100, border: 'none', cursor: 'pointer' }}
+            className="w-full py-3 text-base font-medium disabled:opacity-50 bg-primary text-text rounded-pill border-none cursor-pointer"
           >
             {isPending ? 'Memproses...' : 'Daftar'}
           </button>
         </form>
 
-        <p className="text-sm mt-6 text-center" style={{ color: '#4c4c4c' }}>
+        <p className="text-sm mt-6 text-center text-text">
           Sudah punya akun?{' '}
-          <Link href="/login" className="underline" style={{ color: '#07294d' }}>Masuk</Link>
+          <Link href="/login" className="underline text-bg-secondary">Masuk</Link>
         </p>
       </div>
     </section>

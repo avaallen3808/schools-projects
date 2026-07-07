@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-:root {
+@theme {
   --color-primary: #fdc72f;
   --color-secondary: #ff8e2b;
   --color-bg: #ffffff;
@@ -8,12 +8,14 @@
   --color-text: #4c4c4c;
   --color-text-secondary: #666666;
   --color-border: #f6f4ee;
-  --spacing-unit: 11px;
+  --color-surface: #f6f4ee;
+  --color-error: #dc2626;
+  --color-success: #16a34a;
+  --font-heading: "Prata", serif;
+  --font-body: "Inter", sans-serif;
   --radius-card: 50px;
   --radius-pill: 100px;
   --radius-button: 12px;
-  --font-heading: "Prata", serif;
-  --font-body: "Inter", sans-serif;
 }
 
 * {

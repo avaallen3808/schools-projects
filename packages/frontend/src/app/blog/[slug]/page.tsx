@@ -17,16 +17,16 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
     return (
       <section className="px-8 py-16 text-center">
         <h1 className="text-4xl mb-4">Artikel tidak ditemukan</h1>
-        <Link href="/blog" className="underline" style={{ color: '#fdc72f' }}>Kembali ke Blog</Link>
+        <Link href="/blog" className="underline text-primary">Kembali ke Blog</Link>
       </section>
     );
   }
 
   return (
     <article className="px-8 py-16 max-w-3xl mx-auto">
-      <Link href="/blog" style={{ color: '#666' }}>&larr; Kembali</Link>
+      <Link href="/blog" className="text-text-secondary">&larr; Kembali</Link>
       <h1 className="text-4xl mt-6 mb-4">{post.title}</h1>
-      <div className="text-sm mb-8" style={{ color: '#666' }}>
+      <div className="text-sm mb-8 text-text-secondary">
         {post.category && <span>Kategori: {post.category.name} · </span>}
         {new Date(post.createdAt).toLocaleDateString('id-ID')}
       </div>

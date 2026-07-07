@@ -16,19 +16,19 @@ export default async function BlogPage() {
 
   return (
     <section className="px-8 py-16 max-w-5xl mx-auto">
-      <h1 className="text-5xl mb-8" style={{ fontFamily: 'Prata, serif' }}>Blog</h1>
+      <h1 className="text-5xl mb-8">Blog</h1>
 
       {posts.length === 0 ? (
-        <div className="p-8 text-center" style={{ background: '#f6f4ee', borderRadius: 50 }}>
-          <p style={{ color: '#666' }}>Belum ada artikel.</p>
+        <div className="p-8 text-center bg-surface rounded-card">
+          <p className="text-text-secondary">Belum ada artikel.</p>
         </div>
       ) : (
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post: any) => (
-            <Link key={post.id} href={`/blog/${post.slug}`} className="block p-6" style={{ background: '#f6f4ee', borderRadius: 30, textDecoration: 'none', color: 'inherit' }}>
-              <h2 className="text-xl mb-2" style={{ fontFamily: 'Prata, serif' }}>{post.title}</h2>
-              {post.excerpt && <p className="text-sm mb-3" style={{ color: '#666' }}>{post.excerpt}</p>}
-              <div className="flex items-center gap-3 text-xs" style={{ color: '#999' }}>
+            <Link key={post.id} href={`/blog/${post.slug}`} className="block p-6 bg-surface rounded-card" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <h2 className="text-xl mb-2">{post.title}</h2>
+              {post.excerpt && <p className="text-sm mb-3 text-text-secondary">{post.excerpt}</p>}
+              <div className="flex items-center gap-3 text-xs text-text-secondary">
                 {post.category && <span>{post.category.name}</span>}
                 <span>{new Date(post.createdAt).toLocaleDateString('id-ID')}</span>
               </div>
@@ -41,8 +41,7 @@ export default async function BlogPage() {
         <div className="flex justify-center gap-4 mt-10">
           {Array.from({ length: Math.ceil(meta.total / meta.limit) }, (_, i) => (
             <Link key={i} href={`/blog?page=${i + 1}`}
-              className={`px-4 py-2 text-sm rounded-full ${meta.page === i + 1 ? 'font-bold' : ''}`}
-              style={{ background: meta.page === i + 1 ? '#fdc72f' : '#f6f4ee', color: '#000' }}>
+              className={`px-4 py-2 text-sm rounded-full ${meta.page === i + 1 ? 'bg-primary text-text font-bold' : 'bg-surface text-text'}`}>
               {i + 1}
             </Link>
           ))}

@@ -94,11 +94,11 @@ export default function AdminPresencePage() {
   return (
     <section className="px-8 py-10">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl" style={{ fontFamily: 'Prata, serif' }}>Presensi</h1>
+        <h1 className="text-3xl">Presensi</h1>
         <button
           onClick={() => setRombelModal(true)}
           className="px-4 py-1.5 text-sm font-medium"
-          style={{ background: '#fdc72f', color: '#000', borderRadius: 100, border: 'none', cursor: 'pointer' }}
+          className="px-4 py-1.5 text-sm font-medium bg-primary text-text rounded-pill border-none cursor-pointer"
         >
           + Rombel Baru
         </button>
@@ -117,15 +117,14 @@ export default function AdminPresencePage() {
             <div className="flex gap-2">
               <button
                 onClick={() => setSelectedRombel(r.id)}
-                className="text-xs underline"
-                style={{ color: selectedRombel === r.id ? '#fdc72f' : '#07294d', background: 'none', border: 'none', cursor: 'pointer', fontWeight: selectedRombel === r.id ? 600 : 400 }}
+                className="text-xs underline cursor-pointer"
+                style={{ color: selectedRombel === r.id ? '#fdc72f' : '#07294d', background: 'none', border: 'none', fontWeight: selectedRombel === r.id ? 600 : 400 }}
               >
                 {selectedRombel === r.id ? 'Dipilih' : 'Pilih'}
               </button>
               <button
                 onClick={() => { if (confirm('Hapus rombel?')) deleteRombel.mutate(r.id); }}
-                className="text-xs underline"
-                style={{ color: '#dc2626', background: 'none', border: 'none', cursor: 'pointer' }}
+                className="text-xs underline text-error bg-transparent border-none cursor-pointer"
               >
                 Hapus
               </button>
@@ -148,20 +147,18 @@ export default function AdminPresencePage() {
                 value={recordDate}
                 onChange={(e) => setRecordDate(e.target.value)}
                 className="px-3 py-1.5 rounded-xl text-sm"
-                style={{ border: '1px solid #f6f4ee' }}
+                className="px-3 py-1.5 rounded-xl text-sm border border-border"
               />
               <button
                 onClick={handleBulkHadir}
                 disabled={bulkRecords.isPending}
-                className="px-4 py-1.5 text-sm font-medium disabled:opacity-50"
-                style={{ background: '#e8f5e9', color: '#2e7d32', borderRadius: 100, border: 'none', cursor: 'pointer' }}
+                className="px-4 py-1.5 text-sm font-medium disabled:opacity-50 bg-success text-white rounded-pill border-none cursor-pointer"
               >
                 {bulkRecords.isPending ? 'Memproses...' : 'Semua Hadir'}
               </button>
               <button
                 onClick={() => setRecordModal(true)}
-                className="px-4 py-1.5 text-sm font-medium"
-                style={{ background: '#fdc72f', color: '#000', borderRadius: 100, border: 'none', cursor: 'pointer' }}
+                className="px-4 py-1.5 text-sm font-medium bg-primary text-text rounded-pill border-none cursor-pointer"
               >
                 + Catat Presensi
               </button>
@@ -188,25 +185,24 @@ export default function AdminPresencePage() {
         <form onSubmit={handleRombelSubmit} className="flex flex-col gap-4">
           <input placeholder="Nama Rombel (contoh: X-A)" value={rombelForm.name}
             onChange={(e) => setRombelForm({ ...rombelForm, name: e.target.value })}
-            className="px-4 py-2.5 rounded-xl text-sm" style={{ border: '1px solid #f6f4ee' }} required />
+            className="px-4 py-2.5 rounded-xl text-sm border border-border outline-none focus:border-primary" required />
           <select value={rombelForm.branchId} onChange={(e) => setRombelForm({ ...rombelForm, branchId: e.target.value })}
-            className="px-4 py-2.5 rounded-xl text-sm" style={{ border: '1px solid #f6f4ee' }} required>
+            className="px-4 py-2.5 rounded-xl text-sm border border-border outline-none focus:border-primary" required>
             <option value="">Pilih Cabang</option>
             {((branches as any[]) || []).map((b: any) => <option key={b.id} value={b.id}>{b.name}</option>)}
           </select>
           <select value={rombelForm.academicYearId} onChange={(e) => setRombelForm({ ...rombelForm, academicYearId: e.target.value })}
-            className="px-4 py-2.5 rounded-xl text-sm" style={{ border: '1px solid #f6f4ee' }} required>
+            className="px-4 py-2.5 rounded-xl text-sm border border-border outline-none focus:border-primary" required>
             <option value="">Pilih Tahun Ajaran</option>
             {((academicYears as any[]) || []).map((y: any) => <option key={y.id} value={y.id}>{y.name}</option>)}
           </select>
           <select value={rombelForm.entryGradeId} onChange={(e) => setRombelForm({ ...rombelForm, entryGradeId: e.target.value })}
-            className="px-4 py-2.5 rounded-xl text-sm" style={{ border: '1px solid #f6f4ee' }} required>
+            className="px-4 py-2.5 rounded-xl text-sm border border-border outline-none focus:border-primary" required>
             <option value="">Pilih Tingkat</option>
             {((entryGrades as any[]) || []).map((g: any) => <option key={g.id} value={g.id}>{g.name}</option>)}
           </select>
           <button type="submit" disabled={createRombel.isPending}
-            className="w-full py-2.5 text-sm font-medium disabled:opacity-50"
-            style={{ background: '#fdc72f', color: '#000', borderRadius: 100, border: 'none', cursor: 'pointer' }}>
+            className="w-full py-2.5 text-sm font-medium disabled:opacity-50 bg-primary text-text rounded-pill border-none cursor-pointer">
             Simpan
           </button>
         </form>
@@ -216,12 +212,12 @@ export default function AdminPresencePage() {
       <Modal isOpen={recordModal} onClose={() => { setRecordModal(false); setRecordForm({ studentId: '', status: 'HADIR', note: '' }); }} title="Catat Presensi">
         <form onSubmit={handleRecordSubmit} className="flex flex-col gap-4">
           <select value={recordForm.studentId} onChange={(e) => setRecordForm({ ...recordForm, studentId: e.target.value })}
-            className="px-4 py-2.5 rounded-xl text-sm" style={{ border: '1px solid #f6f4ee' }} required>
+            className="px-4 py-2.5 rounded-xl text-sm border border-border outline-none focus:border-primary" required>
             <option value="">Pilih Siswa</option>
             {((students as any)?.data || []).map((s: any) => <option key={s.id} value={s.id}>{s.name} ({s.email})</option>)}
           </select>
           <select value={recordForm.status} onChange={(e) => setRecordForm({ ...recordForm, status: e.target.value })}
-            className="px-4 py-2.5 rounded-xl text-sm" style={{ border: '1px solid #f6f4ee' }} required>
+            className="px-4 py-2.5 rounded-xl text-sm border border-border outline-none focus:border-primary" required>
             <option value="HADIR">Hadir</option>
             <option value="IZIN">Izin</option>
             <option value="SAKIT">Sakit</option>
@@ -229,10 +225,9 @@ export default function AdminPresencePage() {
           </select>
           <input placeholder="Keterangan (opsional)" value={recordForm.note}
             onChange={(e) => setRecordForm({ ...recordForm, note: e.target.value })}
-            className="px-4 py-2.5 rounded-xl text-sm" style={{ border: '1px solid #f6f4ee' }} />
+            className="px-4 py-2.5 rounded-xl text-sm border border-border outline-none focus:border-primary" />
           <button type="submit" disabled={createRecord.isPending}
-            className="w-full py-2.5 text-sm font-medium disabled:opacity-50"
-            style={{ background: '#fdc72f', color: '#000', borderRadius: 100, border: 'none', cursor: 'pointer' }}>
+            className="w-full py-2.5 text-sm font-medium disabled:opacity-50 bg-primary text-text rounded-pill border-none cursor-pointer">
             Simpan
           </button>
         </form>

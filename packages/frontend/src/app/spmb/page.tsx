@@ -29,7 +29,7 @@ export default async function SpmbPage() {
 
   return (
     <section className="px-8 py-16 max-w-4xl mx-auto">
-      <h1 className="text-5xl mb-6" style={{ fontFamily: 'Prata, serif' }}>
+      <h1 className="text-5xl mb-6">
         {page?.title || 'Penerimaan Murid Baru'}
       </h1>
 
@@ -38,7 +38,7 @@ export default async function SpmbPage() {
       )}
 
       {!page && (
-        <p className="text-lg mb-8" style={{ color: '#666' }}>
+        <p className="text-lg mb-8 text-text-secondary">
           Selamat datang di portal Penerimaan Murid Baru (SPMB).
         </p>
       )}
@@ -51,31 +51,31 @@ export default async function SpmbPage() {
           { step: '3', title: 'Submit Berkas', desc: 'Unggah dokumen persyaratan' },
           { step: '4', title: 'Pengumuman', desc: 'Cek hasil seleksi online' },
         ].map((s) => (
-          <div key={s.step} className="p-5 text-center" style={{ background: '#f6f4ee', borderRadius: 30 }}>
-            <div className="w-10 h-10 mx-auto mb-3 flex items-center justify-center font-semibold text-sm" style={{ background: '#fdc72f', borderRadius: 100 }}>
+          <div key={s.step} className="p-5 text-center bg-surface rounded-card">
+            <div className="w-10 h-10 mx-auto mb-3 flex items-center justify-center font-semibold text-sm bg-primary text-text rounded-pill">
               {s.step}
             </div>
             <p className="text-sm font-medium mb-1">{s.title}</p>
-            <p className="text-xs" style={{ color: '#999' }}>{s.desc}</p>
+            <p className="text-xs text-text-secondary">{s.desc}</p>
           </div>
         ))}
       </div>
 
       {periods.length === 0 ? (
-        <div className="p-8 text-center" style={{ background: '#f6f4ee', borderRadius: 50 }}>
-          <p style={{ color: '#666' }}>Belum ada periode pendaftaran dibuka.</p>
+        <div className="p-8 text-center bg-surface rounded-card">
+          <p className="text-text-secondary">Belum ada periode pendaftaran dibuka.</p>
         </div>
       ) : (
         <div className="grid gap-8 md:grid-cols-2">
           {periods.map((p: any) => (
-            <div key={p.id} className="p-8" style={{ background: '#f6f4ee', borderRadius: 50 }}>
-              <h2 className="text-2xl mb-2" style={{ fontFamily: 'Prata, serif' }}>{p.name}</h2>
-              <p className="text-sm mb-2" style={{ color: '#666' }}>
+            <div key={p.id} className="p-8 bg-surface rounded-card">
+              <h2 className="text-2xl mb-2">{p.name}</h2>
+              <p className="text-sm mb-2 text-text-secondary">
                 {new Date(p.startDate).toLocaleDateString('id-ID')} — {new Date(p.endDate).toLocaleDateString('id-ID')}
               </p>
-              {p.academicYear && <p className="text-xs mb-4" style={{ color: '#999' }}>T.A. {p.academicYear.name}</p>}
+              {p.academicYear && <p className="text-xs text-text-secondary">T.A. {p.academicYear.name}</p>}
               {p._count?.offerings != null && p._count.offerings > 0 && (
-                <p className="text-xs mb-4" style={{ color: '#999' }}>{p._count.offerings} program tersedia</p>
+                <p className="text-xs text-text-secondary">{p._count.offerings} program tersedia</p>
               )}
             </div>
           ))}
@@ -86,13 +86,12 @@ export default async function SpmbPage() {
       <div className="text-center mt-10">
         <Link
           href="/spmb/apply"
-          className="inline-block px-8 py-3 text-base font-medium"
-          style={{ background: '#fdc72f', color: '#000', borderRadius: 100, textDecoration: 'none' }}
+          className="inline-block px-8 py-3 text-base font-medium bg-primary text-text rounded-pill"
         >
           Daftar Sekarang
         </Link>
         <div className="mt-4">
-          <Link href="/spmb/status" className="text-sm underline" style={{ color: '#4c4c4c' }}>
+          <Link href="/spmb/status" className="text-sm underline text-text">
             Sudah mendaftar? Cek status
           </Link>
         </div>

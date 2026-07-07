@@ -117,8 +117,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="flex items-center gap-4">
             <Link
               href="/"
-              className="text-xs underline"
-              style={{ color: '#999', textDecoration: 'none' }}
+              className="text-xs underline text-text-secondary"
+              style={{ textDecoration: 'none' }}
             >
               Lihat Situs
             </Link>
