@@ -339,7 +339,7 @@ Current coverage: **42 unit tests across 7 modules** (auth, cms, master, users, 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `DATABASE_URL` | `postgresql://postgres:postgres@localhost:5432/cms_sekolah` | PostgreSQL connection |
+| `DATABASE_URL` | `postgresql://postgres:postgres@127.0.0.1:5432/cms_sekolah` | PostgreSQL connection |
 | `JWT_SECRET` | (required) | Secret for signing tokens |
 | `JWT_EXPIRATION` | `7d` | Access token expiry |
 | `JWT_REFRESH_EXPIRATION` | `30d` | Refresh token expiry |
