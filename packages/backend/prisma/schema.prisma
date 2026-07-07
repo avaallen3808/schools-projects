@@ -1,0 +1,287 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPERADMIN
+  ADMIN
+  OPERATOR
+  TEACHER
+  STUDENT
+  ALUMNI
+}
+
+enum RegistrationStatus {
+  DRAFT
+  SUBMITTED
+  VERIFIED
+  ACCEPTED
+  REJECTED
+}
+
+enum DocumentStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum PresenceStatus {
+  HADIR
+  IZIN
+  SAKIT
+  ALPA
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      UserRole @default(STUDENT)
+  branchId  String?
+  phone     String?
+  address   String?
+  avatar    String?
+  isVerified Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  branch              Branch?              @relation(fields: [branchId], references: [id])
+  registrations       Registration[]
+  presenceRecords     PresenceRecord[]
+  subjectsAsTeacher   SubjectPresence[]    @relation("teacher")
+
+  @@index([branchId])
+  @@index([email])
+}
+
+model Branch {
+  id        String   @id @default(cuid())
+  name      String
+  address   String?
+  phone     String?
+  email     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users          User[]
+  academicYears  AcademicYearBranch[]
+  offerings      AdmissionOffering[]
+  rombels        Rombel[]
+}
+
+model AcademicYear {
+  id        String   @id @default(cuid())
+  name      String   @unique // "2025/2026"
+  isActive  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  branches  AcademicYearBranch[]
+  rombels   Rombel[]
+  periods   AdmissionPeriod[]
+}
+
+model AcademicYearBranch {
+  id              String      @id @default(cuid())
+  academicYearId  String
+  branchId        String
+
+  academicYear    AcademicYear @relation(fields: [academicYearId], references: [id])
+  branch          Branch       @relation(fields: [branchId], references: [id])
+
+  @@unique([academicYearId, branchId])
+}
+
+model AdmissionPeriod {
+  id              String   @id @default(cuid())
+  academicYearId  String
+  name            String   // "Gelombang 1", "Gelombang 2"
+  startDate       DateTime
+  endDate         DateTime
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  academicYear    AcademicYear @relation(fields: [academicYearId], references: [id])
+  offerings       AdmissionOffering[]
+}
+
+model AdmissionOffering {
+  id              String   @id @default(cuid())
+  periodId        String
+  branchId        String
+  entryGradeId    String
+  trackId         String
+  quota           Int
+  selectionConfig Json?    // { raporWeight: 0.6, ujianWeight: 0.4, ... }
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+
+  period          AdmissionPeriod @relation(fields: [periodId], references: [id])
+  branch          Branch          @relation(fields: [branchId], references: [id])
+  entryGrade      EntryGrade      @relation(fields: [entryGradeId], references: [id])
+  track           Track           @relation(fields: [trackId], references: [id])
+  requirements    AdmissionRequirement[]
+  registrations   Registration[]
+
+  @@unique([periodId, branchId, entryGradeId, trackId])
+}
+
+model EntryGrade {
+  id        String   @id @default(cuid())
+  name      String   @unique // "SD", "SMP", "SMA"
+  createdAt DateTime @default(now())
+
+  offerings AdmissionOffering[]
+  rombels   Rombel[]
+}
+
+model Track {
+  id        String   @id @default(cuid())
+  name      String   @unique // "IPA", "IPS", "Bahasa"
+  createdAt DateTime @default(now())
+
+  offerings AdmissionOffering[]
+}
+
+model AdmissionRequirement {
+  id           String  @id @default(cuid())
+  offeringId   String
+  name         String
+  isMandatory  Boolean @default(true)
+  maxFileSize  Int     @default(5242880) // 5MB
+  allowedTypes String  @default("application/pdf,image/jpeg,image/png")
+
+  offering     AdmissionOffering @relation(fields: [offeringId], references: [id])
+  documents    RegistrationDocument[]
+}
+
+model Registration {
+  id           String             @id @default(cuid())
+  userId       String
+  offeringId   String
+  number       String             @unique // Reg number: REG-2025-00001
+  status       RegistrationStatus @default(DRAFT)
+  totalScore   Float?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  user         User              @relation(fields: [userId], references: [id])
+  offering     AdmissionOffering @relation(fields: [offeringId], references: [id])
+  documents    RegistrationDocument[]
+  subjectGrades SubjectGrade[]
+  examScores   ExamScore[]
+
+  @@index([userId])
+  @@index([offeringId])
+  @@index([status])
+}
+
+model RegistrationDocument {
+  id              String       @id @default(cuid())
+  registrationId  String
+  requirementId   String
+  fileUrl         String
+  fileName        String
+  status          DocumentStatus @default(PENDING)
+  verifiedBy      String?
+  verifiedAt      DateTime?
+  createdAt       DateTime     @default(now())
+
+  registration    Registration @relation(fields: [registrationId], references: [id])
+  requirement     AdmissionRequirement @relation(fields: [requirementId], references: [id])
+}
+
+model SubjectGrade {
+  id              String   @id @default(cuid())
+  registrationId  String
+  subject         String
+  semester        Int
+  score           Float
+
+  registration    Registration @relation(fields: [registrationId], references: [id])
+
+  @@unique([registrationId, subject, semester])
+}
+
+model ExamScore {
+  id              String   @id @default(cuid())
+  registrationId  String
+  subject         String
+  score           Float
+
+  registration    Registration @relation(fields: [registrationId], references: [id])
+
+  @@unique([registrationId, subject])
+}
+
+model Rombel {
+  id              String   @id @default(cuid())
+  branchId        String
+  academicYearId  String
+  entryGradeId    String
+  name            String   // "7A", "7B", "8A"
+  createdAt       DateTime @default(now())
+
+  branch          Branch           @relation(fields: [branchId], references: [id])
+  academicYear    AcademicYear     @relation(fields: [academicYearId], references: [id])
+  entryGrade      EntryGrade       @relation(fields: [entryGradeId], references: [id])
+  presenceRecords PresenceRecord[]
+
+  @@unique([branchId, academicYearId, name])
+}
+
+model PresenceRecord {
+  id          String         @id @default(cuid())
+  rombelId    String
+  studentId   String
+  date        DateTime
+  status      PresenceStatus
+  note        String?
+  createdBy   String
+  createdAt   DateTime       @default(now())
+
+  rombel      Rombel         @relation(fields: [rombelId], references: [id])
+  student     User           @relation(fields: [studentId], references: [id])
+
+  @@unique([rombelId, studentId, date])
+  @@index([date])
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  content   String
+  excerpt   String?
+  authorId  String?
+  imageUrl  String?
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author    User?    @relation(fields: [authorId], references: [id])
+  comments  Comment[]
+
+  @@index([slug])
+  @@index([published])
+}
+
+model Comment {
+  id         String   @id @default(cuid())
+  postId     String
+  name       String
+  email      String
+  content    String
+  approved   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  post       Post     @relation(fields: [postId], references: [id])
+
+  @@index([postId])
+}
