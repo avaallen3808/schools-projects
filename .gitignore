@@ -1,0 +1,59 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# build output
+dist/
+.next/
+out/
+build/
+*.tsbuildinfo
+
+# turbo
+.turbo/
+
+# env
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# testing
+coverage/
+.nyc_output/
+
+# uploads
+uploads/
+*.uploaded
+
+# prisma
+prisma/migrations/
+
+# next.js
+.next/
+.vercel/
+
+# storybook
+storybook-static/
+
+# playwright
+test-results/
+playwright-report/
+
+# docker
+docker-compose.override.yml
