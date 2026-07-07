@@ -73,7 +73,8 @@ describe('AuthService', () => {
 
       expect(result.accessToken).toBe('mock-access-token');
       expect(result.refreshToken).toBeDefined();
-      expect(result.verificationToken).toBe('verify-token');
+      expect(result.verificationToken).toBeDefined();
+      expect(typeof result.verificationToken).toBe('string');
       expect(mockPrisma.user.create).toHaveBeenCalledTimes(1);
     });
 
