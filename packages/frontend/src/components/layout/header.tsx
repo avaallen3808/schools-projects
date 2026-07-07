@@ -8,6 +8,7 @@ export function Header() {
       </Link>
       <nav className="flex gap-8">
         <Link href="/" className="text-sm" style={{ color: '#4c4c4c' }}>Beranda</Link>
+        <Link href="/blog" className="text-sm" style={{ color: '#4c4c4c' }}>Blog</Link>
         <Link href="/spmb" className="text-sm" style={{ color: '#4c4c4c' }}>SPMB</Link>
       </nav>
       <Link
